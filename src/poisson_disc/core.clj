@@ -20,13 +20,13 @@
   (q/stroke 255)
   {:grid (vec (repeat (* (len->grid (q/width))
                          (len->grid (q/height))) nil))
-   :points []
-   :active []})
+   :points [300 300]
+   :active [300 300]})
 
 (defn update-state [state]
   (if (empty? (:points state))
     state
-    (generator/generate state k r [grid-width grid-height]))) ; hier kommt dann (generator state) hin
+    (generator/generate state k r [grid-width grid-height] [500 500]))) ; hier kommt dann (generator state) hin
 
 (defn draw-state [state]
   (q/background 30)
