@@ -1,24 +1,32 @@
 (ns poisson-disc.core
   (:require [quil.core :as q]
-            [quil.middleware :as m]))
+            [quil.middleware :as m]
+            [poisson-disc.generator :as generator]))
 
 (def k 30)
 (def r 10)
 
+(defn len->grid
+  "calculates the grid-width or -height depending on
+  the size of the sketch"
+  [length]
+  (Math/ceil (/ length (/ r (Math/sqrt 2)))))
+
+(def grid-width (len->grid 500))
+(def grid-height (len->grid 500))
+
 (defn setup []
   (q/stroke-weight 5)
   (q/stroke 255)
-  (let [len->grid #(Math/ceil (/ %
-                                 (/ r (Math/sqrt 2))))]
-    {:grid (vec (repeat (* (len->grid (q/width))
-                           (len->grid (q/height))) nil))
-     :points []
-     :active []}))
+  {:grid (vec (repeat (* (len->grid (q/width))
+                         (len->grid (q/height))) nil))
+   :points [[300 300]]
+   :active [[300 300]]})
 
 (defn update-state [state]
   (if (empty? (:points state))
     state
-    state)) ; hier kommt dann (generator state) hin
+    (generator/generate state k r [grid-width grid-height] [500 500]))) ; hier kommt dann (generator state) hin
 
 (defn draw-state [state]
   (q/background 30)
