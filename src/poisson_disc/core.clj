@@ -20,8 +20,8 @@
   (q/stroke 255)
   {:grid (vec (repeat (* (len->grid (q/width))
                          (len->grid (q/height))) nil))
-   :points [300 300]
-   :active [300 300]})
+   :points [[300 300]]
+   :active [[300 300]]})
 
 (defn update-state [state]
   (if (empty? (:points state))
