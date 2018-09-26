@@ -4,7 +4,10 @@
             [poisson-disc.generator :as generator]))
 
 (def k 30) ; Number of neighbor point candidates to generate for a point each iteration
-(def radius 20) ; Minimal radius between two points
+(def radius 15) ; Minimal radius between two points
+
+(def width 500)
+(def height 500)
 
 (defn len->grid
   "calculates the grid-col/row-count depending on the size of the sketch"
@@ -14,8 +17,8 @@
       (Math/ceil)
       (int)))
 
-(def grid-col-count (len->grid 500))
-(def grid-row-count (len->grid 500))
+(def grid-col-count (len->grid width))
+(def grid-row-count (len->grid height))
 
 (defn setup []
   (q/stroke-weight 5)
@@ -24,12 +27,11 @@
                                      (len->grid (q/height))) nil))
                :points []
                :active []}]
-    (generator/add-point state [250 250] [grid-col-count grid-row-count] [500 500])))
+    (generator/add-point state [(/ width 2) (/ height 2)] [grid-col-count grid-row-count] [width height])))
 
 (defn update-state [state]
-  (if (empty? (:active state))
-    state
-    (generator/generate state k radius [grid-col-count grid-row-count] [500 500])))
+  (let [next-state #(generator/generate % k radius [grid-col-count grid-row-count] [width height])]
+    (nth (iterate next-state state) 3)))
 
 (defn draw-state [state]
   (q/background 250)
@@ -41,7 +43,7 @@
 (defn -main [& args]
   (q/defsketch poisson-disc
     :title "poisson disc"
-    :size [500 500]
+    :size [width height]
     :setup setup
     :update update-state
     :draw draw-state

@@ -84,11 +84,13 @@
 (defn generate
   "Generates next iteration of poisson disc algorithm"
   [state k radius [grid-col-count grid-row-count] [width height]]
-  (let [active-point (first (:active state))
-        points (:points state)
-        candidates (rand-points active-point k radius)
-        grid (:grid state)
-        new-point (find-valid-point grid [grid-col-count grid-row-count] [width height] candidates points radius)]
-    (if new-point
-      (add-point state new-point [grid-col-count grid-row-count] [width height])
-      (update-in state [:active] subvec 1))))
+  (if (empty? (:active state))
+    state
+    (let [active-point (first (:active state))
+          points (:points state)
+          candidates (rand-points active-point k radius)
+          grid (:grid state)
+          new-point (find-valid-point grid [grid-col-count grid-row-count] [width height] candidates points radius)]
+      (if new-point
+        (add-point state new-point [grid-col-count grid-row-count] [width height])
+        (update-in state [:active] subvec 1)))))
