@@ -11,7 +11,7 @@
            4))))
 
 (deftest get-nearby-points-test
-  (testing "returns a single nearb point"
+  (testing "returns a single nearby point"
     (is (= (get-nearby-points
             [0 nil nil
              nil nil nil
@@ -60,38 +60,38 @@
 
 
 (deftest find-valid-point-test
-  (testing "finds the first valid point from list of points"
+  (testing "finds the first valid point from list of candidates"
     (is (= (find-valid-point
             [0 nil nil
              nil nil nil
              nil nil nil]  ;grid
-            [3 3]  ;grid-width/height
+            [3 3]  ;grid-col/row-count
             [300 300]  ;width/height
             [[100 50] [200 200]] ;candidates
             [[50 50]] ;points
-            100)
+            100) ;radius
            [200 200])))
-  (testing "chooses the first one of multiple valid points"
+  (testing "chooses the first one of multiple valid candidates"
     (is (= (find-valid-point
             [0 nil nil
              nil nil nil
              nil nil nil]  ;grid
-            [3 3]  ;grid-width/height
+            [3 3]  ;grid-col/row-count
             [300 300]  ;width/height
             [[250 200] [100 50] [200 200]] ;candidates
             [[50 50]] ;points
-            100)
+            100) ;radius
            [250 200])))
   (testing "no valid point is found"
     (is (= (find-valid-point
             [0 nil nil
              nil nil nil
              nil nil nil]  ;grid
-            [3 3]  ;grid-width/height
+            [3 3]  ;grid-col/row-count
             [300 300]  ;width/height
             [[100 50] [50 150]] ;candidates
             [[50 50]] ;points
-            100)
+            100) ;radius
            nil))))
 
 (run-tests)
