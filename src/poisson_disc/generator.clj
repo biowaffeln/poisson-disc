@@ -81,16 +81,22 @@
         (update-in [:active] conj point)
         (assoc-in [:grid grid-index] point-index))))
 
+(defn drop-nth [coll n]
+  (vec (concat
+        (take n coll)
+        (drop (inc n) coll))))
+
 (defn generate
   "Generates next iteration of poisson disc algorithm"
   [state k radius [grid-col-count grid-row-count] [width height]]
   (if (empty? (:active state))
     state
-    (let [active-point (first (:active state))
+    (let [random-index (rand-int (count (:active state)))
+          active-point (nth (:active state) random-index)
           points (:points state)
           candidates (rand-points active-point k radius)
           grid (:grid state)
           new-point (find-valid-point grid [grid-col-count grid-row-count] [width height] candidates points radius)]
       (if new-point
         (add-point state new-point [grid-col-count grid-row-count] [width height])
-        (update-in state [:active] subvec 1)))))
+        (update-in state [:active] drop-nth random-index)))))

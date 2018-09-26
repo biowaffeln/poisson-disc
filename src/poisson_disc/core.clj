@@ -6,8 +6,8 @@
 (def k 30) ; Number of neighbor point candidates to generate for a point each iteration
 (def radius 15) ; Minimal radius between two points
 
-(def width 500)
-(def height 500)
+(def width 1000)
+(def height 600)
 
 (defn len->grid
   "calculates the grid-col/row-count depending on the size of the sketch"
@@ -27,11 +27,11 @@
                                      (len->grid (q/height))) nil))
                :points []
                :active []}]
-    (generator/add-point state [(/ width 2) (/ height 2)] [grid-col-count grid-row-count] [width height])))
+    (generator/add-point state [(rand-int width) (rand-int height)] [grid-col-count grid-row-count] [width height])))
 
 (defn update-state [state]
   (let [next-state #(generator/generate % k radius [grid-col-count grid-row-count] [width height])]
-    (nth (iterate next-state state) 3)))
+    (nth (iterate next-state state) 10)))
 
 (defn draw-state [state]
   (q/background 250)
