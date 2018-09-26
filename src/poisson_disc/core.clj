@@ -3,17 +3,17 @@
             [quil.middleware :as m]
             [poisson-disc.generator :as generator]))
 
-(def k 30)
-(def r 20)
+(def k 30) ; Number of neighbor point candidates to generate for a point each iteration
+(def radius 20) ; Minimal radius between two points
 
 (defn len->grid
-  "calculates the grid-width or -height depending on
+  "calculates the grid-col-count or -height depending on
   the size of the sketch"
   [length]
-  (int (Math/ceil (/ length (/ r (Math/sqrt 2))))))
+  (int (Math/ceil (/ length (/ radius (Math/sqrt 2))))))
 
-(def grid-width (len->grid 500))
-(def grid-height (len->grid 500))
+(def grid-col-count (len->grid 500))
+(def grid-row-count (len->grid 500))
 
 (defn setup []
   (q/stroke-weight 4)
@@ -22,12 +22,12 @@
                                      (len->grid (q/height))) nil))
                :points []
                :active []}]
-    (generator/add-point state [250 250] [grid-width grid-height] [500 500])))
+    (generator/add-point state [250 250] [grid-col-count grid-row-count] [500 500])))
 
 (defn update-state [state]
   (if (empty? (:active state))
     state
-    (generator/generate state k r [grid-width grid-height] [500 500]))) ; hier kommt dann (generator state) hin
+    (generator/generate state k radius [grid-col-count grid-row-count] [500 500])))
 
 (defn draw-state [state]
   (q/background 30)
