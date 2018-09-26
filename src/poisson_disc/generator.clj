@@ -21,11 +21,6 @@
         grid-y (Math/floor (* grid-height (/ y height)))]
     (int (+ (* grid-width grid-y) grid-x))))
 
-; (point->index
-;  [100 100]
-;  [3 3]
-;  [300 300])
-
 (defn get-nearby-points
   "Returns all adjecent points for the points in the cell of index"
   [grid grid-width index points]
@@ -39,14 +34,6 @@
      (get points (get grid (+ index grid-width)))
      (get points (get grid (+ (inc index) grid-width)))])
 
-(get-nearby-points
- [0 nil nil
-  nil nil nil
-  nil nil nil]
- 3
- 0.0
- [[50 50]])
-
 (defn distance-greater-than?
   "returns true if the distance between two points is greater than
   the distance d, else return false"
@@ -59,16 +46,11 @@
       (> (Math/sqrt (+ (Math/pow (- x2 x1) 2) (Math/pow (- y2 y1) 2))) distance))
     true))
 
-;(distance-greater-than? [5 5] [0 0] 4.9)
-;(distance-greater-than? [5 2] nil 5)
-
 (defn point-is-valid?
   "Checks if a point doesn't intersect with other points.
   If the point is valid, return true, else return false"
   [point points distance]
   (every? #(distance-greater-than? point % distance) points))
-
-;(point-is-valid? [51 50] [nil nil nil nil [50 50] nil nil nil nil] 100)
 
 (defn find-valid-point
   "returns the first valid point, if there aren't any returns nil"
@@ -81,16 +63,6 @@
         (if (point-is-valid? candidate nearby-points r)
           candidate
           (recur (first remaining) (rest remaining)))))))
-
-; (find-valid-point
-;  [0 nil nil
-;   nil nil nil
-;   nil nil nil]  ;grid
-;  [3 3]  ;grid-width/height
-;  [300 300]  ;width/height
-;  [[100 50] [200 200]] ;candidates
-;  [[50 50]] ;points
-;  50)
 
 (defn add-point
   "Takes the state and a point and adds the point to points,
