@@ -4,27 +4,28 @@
             [poisson-disc.generator :as generator]))
 
 (def k 30)
-(def r 10)
+(def r 20)
 
 (defn len->grid
   "calculates the grid-width or -height depending on
   the size of the sketch"
   [length]
-  (Math/ceil (/ length (/ r (Math/sqrt 2)))))
+  (int (Math/ceil (/ length (/ r (Math/sqrt 2))))))
 
 (def grid-width (len->grid 500))
 (def grid-height (len->grid 500))
 
 (defn setup []
-  (q/stroke-weight 5)
+  (q/stroke-weight 4)
   (q/stroke 255)
-  {:grid (vec (repeat (* (len->grid (q/width))
-                         (len->grid (q/height))) nil))
-   :points [[300 300]]
-   :active [[300 300]]})
+  (let [state {:grid (vec (repeat (* (len->grid (q/width))
+                                     (len->grid (q/height))) nil))
+               :points []
+               :active []}]
+    (generator/add-point state [250 250] [grid-width grid-height] [500 500])))
 
 (defn update-state [state]
-  (if (empty? (:points state))
+  (if (empty? (:active state))
     state
     (generator/generate state k r [grid-width grid-height] [500 500]))) ; hier kommt dann (generator state) hin
 

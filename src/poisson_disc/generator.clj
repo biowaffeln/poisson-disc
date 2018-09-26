@@ -24,15 +24,15 @@
 (defn get-nearby-points
   "Returns all adjecent points for the points in the cell of index"
   [grid grid-width index points]
-    [(get points (get grid (- (dec index) grid-width)))
-     (get points (get grid (- index grid-width)))
-     (get points (get grid (- (inc index) grid-width)))
-     (get points (get grid (dec index)))
-     (get points (get grid index))
-     (get points (get grid (inc index)))
-     (get points (get grid (+ (dec index) grid-width)))
-     (get points (get grid (+ index grid-width)))
-     (get points (get grid (+ (inc index) grid-width)))])
+  [(get points (get grid (- (dec index) grid-width)))
+   (get points (get grid (- index grid-width)))
+   (get points (get grid (- (inc index) grid-width)))
+   (get points (get grid (dec index)))
+   (get points (get grid index))
+   (get points (get grid (inc index)))
+   (get points (get grid (+ (dec index) grid-width)))
+   (get points (get grid (+ index grid-width)))
+   (get points (get grid (+ (inc index) grid-width)))])
 
 (defn distance-greater-than?
   "returns true if the distance between two points is greater than
@@ -46,11 +46,20 @@
       (> (Math/sqrt (+ (Math/pow (- x2 x1) 2) (Math/pow (- y2 y1) 2))) distance))
     true))
 
+(defn in-bounds?
+  [[x y] [width height]]
+  (and (>= x 0)
+       (>= y 0)
+       (< x width)
+       (< y height)))
+
 (defn point-is-valid?
-  "Checks if a point doesn't intersect with other points.
+  "Checks if a point is within the bounds of the canvas
+  and doesn't intersect with other points.
   If the point is valid, return true, else return false"
-  [point points distance]
-  (every? #(distance-greater-than? point % distance) points))
+  [point points distance [width height]]
+  (and (in-bounds? point [width height])
+       (every? #(distance-greater-than? point % distance) points)))
 
 (defn find-valid-point
   "returns the first valid point, if there aren't any returns nil"
@@ -60,7 +69,7 @@
     (when candidate
       (let [grid-index (point->index candidate [grid-width grid-height] [width height])
             nearby-points (get-nearby-points grid grid-width grid-index points)]
-        (if (point-is-valid? candidate nearby-points r)
+        (if (point-is-valid? candidate nearby-points r [width height])
           candidate
           (recur (first remaining) (rest remaining)))))))
 
