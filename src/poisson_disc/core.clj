@@ -7,17 +7,19 @@
 (def radius 20) ; Minimal radius between two points
 
 (defn len->grid
-  "calculates the grid-col-count or -height depending on
-  the size of the sketch"
+  "calculates the grid-col/row-count depending on the size of the sketch"
   [length]
-  (int (Math/ceil (/ length (/ radius (Math/sqrt 2))))))
+  (-> length
+      (/ (/ radius (Math/sqrt 2)))
+      (Math/ceil)
+      (int)))
 
 (def grid-col-count (len->grid 500))
 (def grid-row-count (len->grid 500))
 
 (defn setup []
-  (q/stroke-weight 4)
-  (q/stroke 255)
+  (q/stroke-weight 5)
+  (q/stroke 51)
   (let [state {:grid (vec (repeat (* (len->grid (q/width))
                                      (len->grid (q/height))) nil))
                :points []
@@ -30,7 +32,7 @@
     (generator/generate state k radius [grid-col-count grid-row-count] [500 500])))
 
 (defn draw-state [state]
-  (q/background 30)
+  (q/background 250)
   (doseq [p (:points state)]
     (let [x (first p)
           y (second p)]
